@@ -10,6 +10,20 @@ import android.widget.GridLayout;
 import java.security.InvalidParameterException;
 
 public abstract class TileFragment extends Fragment {
+    private static final int BACKGROUND_COLORS[] = new int[] {
+            R.color.background_1,
+            R.color.background_2,
+            R.color.background_3,
+            R.color.background_4,
+            R.color.background_5,
+            R.color.background_6,
+            R.color.background_7,
+            R.color.background_8,
+            R.color.background_9,
+            R.color.background_10,
+            R.color.background_11,
+    };
+
     private GridLayout.LayoutParams _gridLayoutParams;
     private int _prefW = 1;
     private int _prefH = 1;
@@ -18,6 +32,13 @@ public abstract class TileFragment extends Fragment {
 
     public final void setGridLayoutParams(GridLayout.LayoutParams params) {
         _gridLayoutParams = params;
+    }
+
+    public final int getBackgroundColor() {
+        final int hash = getClass().hashCode();
+        final int raw = BACKGROUND_COLORS[hash % BACKGROUND_COLORS.length];
+
+        return getResources().getColor(raw);
     }
 
     protected abstract View createView(LayoutInflater inflater, ViewGroup container);
@@ -29,6 +50,8 @@ public abstract class TileFragment extends Fragment {
         if (view == null) {
             throw new NullPointerException("TileFragment#createView returned null");
         }
+
+        view.setBackgroundColor(getBackgroundColor());
 
         if (_gridLayoutParams != null) {
             view.setLayoutParams(_gridLayoutParams);

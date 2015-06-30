@@ -13,6 +13,8 @@ import android.widget.GridLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+import pimms.joakimvision.transport.TrainTile;
+
 public class JVActivity extends Activity {
     private GridLayout _gridLayout;
 
@@ -35,6 +37,7 @@ public class JVActivity extends Activity {
         // This is where new TileFragments are added.
         List<TileFragment> fragments = new ArrayList<>();
         fragments.add(new ClockTile());
+        fragments.add(new TrainTile());
 
         layoutTileFragments(fragments);
     }

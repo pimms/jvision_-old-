@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="error_background" >#CC3333</color>
+
+    <color name="text_red">#800</color>
+    <color name="text_green">#080</color>
+    <color name="text_blue">#008</color>
+
+    <color name="background_1">#ef85a2</color>
+    <color name="background_2">#DDAADD</color>
+    <color name="background_3">#AADDAA</color>
+    <color name="background_4">#AAAADD</color>
+    <color name="background_5">#DDAAAA</color>
+    <color name="background_6">#CCAACC</color>
+    <color name="background_7">#CCAAAA</color>
+    <color name="background_8">#AACCAA</color>
+    <color name="background_9">#BBEEEE</color>
+    <color name="background_10">#EEBBEE</color>
+    <color name="background_11">#EEEEBB</color>
+</resources>
