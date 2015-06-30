@@ -45,6 +45,7 @@ public class TileOrganizer {
             TilePosition tp = placeTile(frags.get(i));
             if (tp != null) {
                 placements.add(tp);
+                Log.d("Shit going down", "Tile at " + tp.x + ", " + tp.y + " with sz " + tp.w + ", " + tp.h);
             }
         }
 
@@ -112,7 +113,7 @@ public class TileOrganizer {
             for (int x=0; x<nCols; x++) {
                 boolean mismatch = false;
 
-                if (x + w > nRows || y + h > nCols) {
+                if (x + w > nCols || y + h > nRows) {
                     mismatch = true;
                 } else {
                     // [x+j, y+k] is the area covered by the view. Ensure all squares are free.

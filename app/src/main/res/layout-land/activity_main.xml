@@ -9,8 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center_horizontal"
-        android:columnCount="5"
-        android:rowCount="5"
+        android:columnCount="16"
+        android:rowCount="9"
         android:orientation="horizontal">
     </GridLayout>
 </LinearLayout>

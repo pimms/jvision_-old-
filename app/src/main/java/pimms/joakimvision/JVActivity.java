@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JVActivity extends Activity {
-    private ArrayList<TileFragment> _tileFragments = new ArrayList<>();
     private GridLayout _gridLayout;
 
     @Override
@@ -33,19 +32,16 @@ public class JVActivity extends Activity {
         setContentView(R.layout.activity_main);
         _gridLayout = (GridLayout)findViewById(R.id.fragment_container);
 
-        for (int i=0; i<7; i++) {
-            TileFragment frag = new TileFragment();
-            frag.setArguments(getIntent().getExtras());
-            frag.setText("Fragment " + i);
-            _tileFragments.add(frag);
-        }
+        // This is where new TileFragments are added.
+        List<TileFragment> fragments = new ArrayList<>();
+        fragments.add(new ClockTile());
 
-        layoutTileFragments();
+        layoutTileFragments(fragments);
     }
 
-    private void layoutTileFragments() {
+    private void layoutTileFragments(List<TileFragment> fragments) {
         TileOrganizer organizer = new TileOrganizer(_gridLayout);
-        List<TileOrganizer.TilePosition> positions = organizer.organizeTiles(_tileFragments);
+        List<TileOrganizer.TilePosition> positions = organizer.organizeTiles(fragments);
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);

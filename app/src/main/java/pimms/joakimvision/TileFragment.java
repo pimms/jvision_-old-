@@ -6,49 +6,71 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
-import android.widget.TextView;
 
-public class TileFragment extends Fragment {
-    private String _labelText = "Default text";
+import java.security.InvalidParameterException;
+
+public abstract class TileFragment extends Fragment {
     private GridLayout.LayoutParams _gridLayoutParams;
-
-    public void setText(String text) {
-        _labelText = text;
-    }
+    private int _prefW = 1;
+    private int _prefH = 1;
+    private int _minW = 1;
+    private int _minH = 1;
 
     public final void setGridLayoutParams(GridLayout.LayoutParams params) {
         _gridLayoutParams = params;
     }
 
+    protected abstract View createView(LayoutInflater inflater, ViewGroup container);
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
-        View view = inflater.inflate(R.layout.fragment_tile, container, false);
+    public final View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
+        View view = createView(inflater, container);
 
-        TextView tv = (TextView)view.findViewById(R.id.tile_label);
-        tv.setText(_labelText);
+        if (view == null) {
+            throw new NullPointerException("TileFragment#createView returned null");
+        }
 
-        view.setLayoutParams(_gridLayoutParams);
+        if (_gridLayoutParams != null) {
+            view.setLayoutParams(_gridLayoutParams);
+        }
 
         return view;
     }
 
-    public int getPreferredWidth() {
-        return 2;
+
+    public final int getPreferredWidth() {
+        return _prefW;
     }
 
-    public int getPreferredHeight() {
-        return 2;
+    public final int getPreferredHeight() {
+        return _prefH;
     }
 
-    public int getMinimumWidth() {
-        return 1;
+    public final int getMinimumWidth() {
+        return _minW;
     }
 
-    public int getMinimumHeight() {
-        return 1;
+    public final int getMinimumHeight() {
+        return _minH;
     }
 
-    public final int getArea() {
-        return getPreferredHeight() * getPreferredWidth();
+
+    protected void setPreferredSize(int w, int h) {
+        if (w <= 0 || h <= 0) {
+            throw new InvalidParameterException("Preferred dimensions must be positive");
+        }
+
+        _prefW = w;
+        _prefH = h;
     }
+
+    protected void setMinimumSize(int w, int h) {
+        if (w <= 0 || h <= 0) {
+            throw new InvalidParameterException("Minimum dimensions must be positive");
+        }
+
+        _minW = w;
+        _minH = h;
+    }
+
 }
