@@ -2,19 +2,18 @@ package pimms.joakimvision.transport;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
-
-import java.io.IOException;
 import java.util.List;
 
-public class RuterDownloader {
+import pimms.joakimvision.HTTP;
+
+public class RuterDownloader implements HTTP.Delegate {
     private TransportDelegate _delegate;
     private boolean _isDownloading;
+    private int _stopID;
+    private int _lineRef;
+    private String _destName;
 
     public RuterDownloader(TransportDelegate delegate) {
         _delegate = delegate;
@@ -32,54 +31,53 @@ public class RuterDownloader {
      * @param lineRef The line to retrieve data for.
      * @param destinationName The name of the destination. Almost always the stopping station for
      *                        the departure (Lillestrøm, Skien, Gjøvik, Spikkestad, etc.).
-     * @return Whether or not the download was successfully started.
+     * @return Whether or not the download started. Only one download can be active per instance of
+     *         RuterDownloader at any given time.
      */
     public boolean downloadTransportData(final int stopID, final int lineRef, final String destinationName) {
         if (_isDownloading) {
+            Log.w("RuterDownloader", "Attempted do start a second simultaneous download on busy instance");
             return false;
         }
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    doDownload(stopID, lineRef, destinationName);
-                } catch (IOException ioEx) {
-                    MT_notifyDelegateError("Unable to retrieve data:\n" + ioEx.getMessage());
-                    ioEx.printStackTrace();
-                } catch (Exception general) {
-                    MT_notifyDelegateError("Unable to parse data:\n" + general.getMessage());
-                    general.printStackTrace();
-                }
+        _isDownloading = true;
 
-                _isDownloading = false;
-            }
-        }).start();
+        final String url = "http://reisapi.ruter.no/stopvisit/getdepartures/" + stopID;
+
+        _stopID = stopID;
+        _lineRef = lineRef;
+        _destName = destinationName;
+
+        HTTP http = new HTTP(this);
+        http.setMainTreadCallback(false);
+        http.getSite(url);
 
         return true;
     }
 
+    @Override
+    public void onHTTPSuccess(String url, String retrievedContent) {
+        RuterParser parser = new RuterParser(_lineRef, _destName);
+        List<TransportDeparture> departures = null;
 
-    private void doDownload(int stopID, int lineRef, String destinationName) throws Exception {
-        final String url = "http://reisapi.ruter.no/stopvisit/getdepartures/" + stopID;
+        try {
+            departures = parser.parse(retrievedContent);
+        } catch (Exception e) {
+            Log.e("RuterDownloader", "Failed to parse Ruter data");
+        }
 
-        HttpClient httpClient = new DefaultHttpClient();
-
-        HttpGet request = new HttpGet(url);
-        request.addHeader("Accept", "text/html,application/xhtml+html,application/xml");
-        request.addHeader("User-Agent", "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.2.2) Gecko/20100316 Firefox/3.6.2");
-        HttpResponse response = httpClient.execute(request);
-
-        String xml = EntityUtils.toString(response.getEntity());
-
-        RuterParser parser = new RuterParser(lineRef, destinationName);
-        List<TransportDeparture> departures = parser.parse(xml);
+        _isDownloading = false;
 
         if (departures == null || departures.size() == 0) {
             MT_notifyDelegateError("No departures found.");
         } else {
             MT_notifyDelegateSuccess(departures);
         }
+    }
+
+    @Override
+    public void onHTTPError(String url, String message) {
+        MT_notifyDelegateError(message);
     }
 
 
