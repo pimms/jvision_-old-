@@ -29,6 +29,7 @@ public abstract class TileFragment extends Fragment {
     private int _prefH = 1;
     private int _minW = 1;
     private int _minH = 1;
+    private int _priority = 10;
 
     public final void setGridLayoutParams(GridLayout.LayoutParams params) {
         _gridLayoutParams = params;
@@ -77,6 +78,10 @@ public abstract class TileFragment extends Fragment {
         return _minH;
     }
 
+    public final int getPriortiy() {
+        return _priority;
+    }
+
 
     protected void setPreferredSize(int w, int h) {
         if (w <= 0 || h <= 0) {
@@ -96,4 +101,13 @@ public abstract class TileFragment extends Fragment {
         _minH = h;
     }
 
+    /**
+     * Set the priority of this TileFragment. Tiles with higher priority will be shown more often.
+     * The default priority is 10.
+     *
+     * @param priority The new priority to assign.
+     */
+    protected void setPriority(int priority) {
+        _priority = priority;
+    }
 }
