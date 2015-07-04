@@ -53,6 +53,11 @@ public class HTTP {
 
 
     private void fetchSite(String url) {
+        if (url == null || url.length() == 0) {
+            notifyFailure("about;blank", "No URL given");
+            return;
+        }
+
         HttpClient httpClient = new DefaultHttpClient();
 
         HttpGet request = new HttpGet(url);

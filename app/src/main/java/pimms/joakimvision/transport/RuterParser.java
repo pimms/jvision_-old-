@@ -15,6 +15,8 @@ import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import pimms.joakimvision.XMLHelper;
+
 class RuterParser {
     private int _lineRef;
     private String _destination;
@@ -68,13 +70,13 @@ class RuterParser {
     }
 
     private boolean parseJourneyData(Element root, TransportDeparture departure) throws Exception {
-        Element eDestination = findElement(root, "DestinationName");
-        Element eLineRef = findElement(root, "LineRef");
-        Element eVehicleType = findElement(root, "VehicleMode");
-        Element eAimedDeparture = findElement(root, "AimedDepartureTime");
-        Element eExpectedDeparture = findElement(root, "ExpectedDepartureTime");
-        Element ePlatformName = findElement(root, "DeparturePlatformName");
-        Element eLineName = findElement(root, "PublishedLineName");
+        Element eDestination = XMLHelper.findElement(root, "DestinationName");
+        Element eLineRef = XMLHelper.findElement(root, "LineRef");
+        Element eVehicleType = XMLHelper.findElement(root, "VehicleMode");
+        Element eAimedDeparture = XMLHelper.findElement(root, "AimedDepartureTime");
+        Element eExpectedDeparture = XMLHelper.findElement(root, "ExpectedDepartureTime");
+        Element ePlatformName = XMLHelper.findElement(root, "DeparturePlatformName");
+        Element eLineName = XMLHelper.findElement(root, "PublishedLineName");
 
         if (eDestination == null || eLineRef == null || (eAimedDeparture == null || eExpectedDeparture == null)) {
             return false;
@@ -152,20 +154,5 @@ class RuterParser {
                 }
             }
         }
-    }
-
-
-    private Element findElement(Element root, String elementName) {
-        return findElement(root, elementName, 0);
-    }
-
-    private Element findElement(Element root, String elementName, int index) {
-        NodeList nodeList = root.getElementsByTagName(elementName);
-
-        if (nodeList != null && nodeList.getLength() > index) {
-            return (Element)nodeList.item(index);
-        }
-
-        return null;
     }
 }

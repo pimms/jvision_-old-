@@ -10,6 +10,8 @@ import android.widget.GridLayout;
 import java.security.InvalidParameterException;
 
 public abstract class TileFragment extends Fragment {
+    public static final int DEFAULT_PRIORITY = 10;
+
     private static final int BACKGROUND_COLORS[] = new int[] {
             R.color.background_1,
             R.color.background_2,
@@ -29,7 +31,7 @@ public abstract class TileFragment extends Fragment {
     private int _prefH = 1;
     private int _minW = 1;
     private int _minH = 1;
-    private int _priority = 10;
+    private int _priority = DEFAULT_PRIORITY;
 
     public final void setGridLayoutParams(GridLayout.LayoutParams params) {
         _gridLayoutParams = params;
@@ -103,7 +105,7 @@ public abstract class TileFragment extends Fragment {
 
     /**
      * Set the priority of this TileFragment. Tiles with higher priority will be shown more often.
-     * The default priority is 10.
+     * The default priority is TileFragment.DEFAULT_PRIORITY.
      *
      * @param priority The new priority to assign.
      */

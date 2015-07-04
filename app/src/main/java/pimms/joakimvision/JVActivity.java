@@ -13,6 +13,7 @@ import android.widget.GridLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+import pimms.joakimvision.rss.RSSTile;
 import pimms.joakimvision.transport.TrainTile;
 
 public class JVActivity extends Activity {
@@ -38,6 +39,16 @@ public class JVActivity extends Activity {
         List<TileFragment> fragments = new ArrayList<>();
         fragments.add(new ClockTile());
         fragments.add(new TrainTile());
+
+        RSSTile rss = new RSSTile();
+        rss.setRSSUrl("http://www.nrk.no/nyheter/toppsaker.rss");
+        rss.setTitle("NRK");
+        fragments.add(rss);
+
+        rss = new RSSTile();
+        rss.setRSSUrl("http://podkast.nrk.no/program/radioresepsjonen.rss");
+        rss.setTitle("Radioresepsjonen!");
+        fragments.add(rss);
 
         layoutTileFragments(fragments);
     }

@@ -13,8 +13,8 @@ public class ClockTile extends TileFragment {
     private TextView _dateLabel;
 
     public ClockTile() {
-        setPreferredSize(8, 6);
-        setMinimumSize(8, 3);
+        setPreferredSize(4, 4);
+        setMinimumSize(4, 3);
     }
 
     @Override
